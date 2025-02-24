@@ -11,7 +11,7 @@ int send_buff(int client_fd, char *buffer)
 {
     int len = strlen(buffer);
 
-    if (send(client_fd, buffer, len, 0) < 0) {
+    if (write(client_fd, buffer, len) < 0) {
         perror("ERROR : write failed");
         return -1;
     }

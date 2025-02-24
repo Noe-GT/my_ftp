@@ -7,6 +7,13 @@
 
 #include "../include/ftp.h"
 
+int noop_cmd(int client_fd)
+{
+    if (send_buff(client_fd, "OK\n") == -1)
+        return -1;
+    return 0;
+}
+
 int quit_cmd(server_t *server, int client_fd)
 {
     close(client_fd);

@@ -13,6 +13,8 @@ static int check_cmd(server_t *server, char *buffer, int client_fd)
     char **tokens = my_str_to_word_array(clean, " ");
     int len = my_array_len(tokens);
 
+    if (len == 1 && strcmp(tokens[0], "NOOP") == 0)
+        return noop_cmd(client_fd);
     if (len == 1 && strcmp(tokens[0], "QUIT") == 0)
         return quit_cmd(server, client_fd);
     if ((len == 1 || len == 2) && strcmp(tokens[0], "HELP") == 0)
