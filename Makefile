@@ -19,7 +19,7 @@ OBJ	=	$(SRC:src/%.c=bin/%.o)
 
 CFLAGS	=	-g3 -W -Wall
 
-EXEC	=	ftp
+EXEC	=	myftp
 
 all:	compile_lib	$(EXEC)
 
