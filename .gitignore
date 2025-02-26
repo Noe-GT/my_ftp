@@ -1,0 +1,9 @@
+*.o
+*.a
+*.log
+*.txt
+ftp
+bin/
+test.c
+test2.c
+vgcore*
