@@ -6,9 +6,6 @@
 */
 
 #include "my.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 char *concat_params(int argc, char **argv)
 {
@@ -18,11 +15,11 @@ char *concat_params(int argc, char **argv)
     int ln = 0;
 
     for (int i = 0; i < argc; i++){
-        max_len += my_strlen(argv[i]) + 1;
+        max_len += strlen(argv[i]) + 1;
     }
     str = (char *)malloc((max_len + 1) * sizeof(char) + argc);
     for (int j = 0; j < argc; j++){
-        ln = my_strlen(argv[j]);
+        ln = strlen(argv[j]);
         for (int k = 0; k < ln; k++){
             str[l] = argv[j][k];
             l++;

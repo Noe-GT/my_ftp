@@ -14,10 +14,13 @@ int noop_cmd(int client_fd)
     return 0;
 }
 
-int quit_cmd(server_t *server, int client_fd)
+int quit_cmd(server_t *server, int client_i)
 {
-    close(client_fd);
-    printf("Client socket '%d' closed\n", client_fd);
+    close(server->client_fds[client_i].fd);
+    printf("Client socket '%d' closed\n", server->client_fds[client_i].fd);
+    server->client_fds = remove_fd_from_array(server->client_fds,
+        client_i, server->nfds);
+    server->nfds--;
     return 1;
 }
 
@@ -46,9 +49,10 @@ static int send_help_cmd(server_t *server, int client_fd, char *cmd)
     return 0;
 }
 
-int help_cmd(server_t *server, int client_fd, char **tokens, int tks_len)
+int help_cmd(server_t *server, int client_i, char **tokens, int tks_len)
 {
     int res = 0;
+    int client_fd = server->client_fds[client_i].fd;
 
     if (tks_len == 2)
         res = send_help_cmd(server, client_fd, tokens[1]);

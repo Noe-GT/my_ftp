@@ -5,7 +5,7 @@
 ** removes unwanted characters
 */
 
-#include "../../include/my.h"
+#include "my.h"
 
 int is_unwanted(char c, char *unwanted)
 {

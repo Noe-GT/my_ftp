@@ -5,7 +5,7 @@
 ** removes unwanted spaces
 */
 
-#include "../../include/my.h"
+#include "my.h"
 
 char *remove_unwanted_spaces(char *str)
 {

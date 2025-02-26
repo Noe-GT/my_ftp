@@ -15,6 +15,9 @@ typedef struct server_s {
     int *sockets;
     char **available_cmds;
     char **cmds_desc;
+    struct pollfd *client_fds;
+    int nfds;
+    bool stop_serv;
 } server_t;
 
 #endif /* !SOCKET_H_ */

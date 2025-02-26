@@ -10,14 +10,16 @@
 int main(int ac, char **av)
 {
     server_t *server = (server_t *)malloc(sizeof(server_t));
-    int res = 0;
+    int out;
 
-    if (ac != 2) {
+    if (ac != 3) {
         perror("Wrong number of arguments");
-        return 1;
+        return 84;
     }
     init(server, atoi(av[1]));
-    res = run_server(server);
+    out = run_server(server);
     free_all(server);
-    return res;
+    if (out == -1)
+        return 84;
+    return 0;
 }

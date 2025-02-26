@@ -5,7 +5,7 @@
 ** splits a string into words
 */
 
-#include "../../include/my.h"
+#include "my.h"
 
 static int is_sep(char character, char *sep)
 {
@@ -20,7 +20,7 @@ static int is_sep(char character, char *sep)
 
 static int num_of_words(char const *str, int i, char *sep)
 {
-    int length = my_strlen(str);
+    int length = strlen(str);
     int cpt = 0;
 
     while (i < length) {

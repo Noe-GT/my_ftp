@@ -7,7 +7,6 @@
 
 
 #include "my.h"
-#include <unistd.h>
 
 int nbr_str(char *const *tab)
 {
@@ -26,9 +25,9 @@ int my_show_word_array(char *const *tab)
     int i = 0;
 
     while (i < nbr) {
-        len = my_strlen(tab[i]);
+        len = strlen(tab[i]);
         write(1, tab[i], len);
-        my_putchar('\n');
+        putchar('\n');
         i++;
     }
     return i;

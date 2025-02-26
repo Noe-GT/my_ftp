@@ -5,13 +5,13 @@
 ** nbr_to_str
 */
 
-#include "../../include/my.h"
+#include "my.h"
 
 void print_array(char **array)
 {
     while (*array) {
-        my_putstr(*array);
+        puts(*array);
         array++;
-        my_putchar('\n');
+        putchar('\n');
     }
 }

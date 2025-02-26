@@ -16,5 +16,6 @@
     #include <errno.h>
     #include <arpa/inet.h>
     #include <poll.h>
+    #include <stdbool.h>
 
 #endif /* !INCLUDE_H_ */

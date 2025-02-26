@@ -5,7 +5,7 @@
 ** return 1 if c is present in str
 */
 
-#include "../../include/my.h"
+#include "my.h"
 
 int char_is_present(char c, char *str)
 {

@@ -5,7 +5,7 @@
 ** removes unwanted characters
 */
 
-#include "../../include/my.h"
+#include "my.h"
 
 int is_unwanted2(char *str, char *unwanted, int pos)
 {
@@ -41,7 +41,7 @@ char *clean_str_ba(char *str, char *unwanted)
 {
     int pos = 0;
     char *result;
-    int total_len = my_strlen(str);
+    int total_len = strlen(str);
     int b_len = before_len(str, unwanted);
     int a_len = after_len(str, unwanted, total_len - 1);
     int result_len = total_len - b_len - a_len;

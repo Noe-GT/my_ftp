@@ -5,11 +5,11 @@
 ** str_cut
 */
 
-#include "../../include/my.h"
+#include "my.h"
 
 char *str_cut(char *str, int pos)
 {
-    int len = my_strlen(str);
+    int len = strlen(str);
     int i = pos + 1;
     char *result = malloc(sizeof(char) * (len - pos + 1));
 

@@ -5,8 +5,7 @@
 ** Free an array
 */
 
-#include <stdlib.h>
-#include "../../include/my.h"
+#include "my.h"
 
 void free_array(char **array)
 {
