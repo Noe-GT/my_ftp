@@ -2,27 +2,10 @@
 ** EPITECH PROJECT, 2025
 ** ftp
 ** File description:
-** commands
+** help_cmd
 */
 
-#include "../include/ftp.h"
-
-int noop_cmd(int client_fd)
-{
-    if (send_buff(client_fd, "OK\n") == -1)
-        return -1;
-    return 0;
-}
-
-int quit_cmd(server_t *server, int client_i)
-{
-    close(server->client_fds[client_i].fd);
-    printf("Client socket '%d' closed\n", server->client_fds[client_i].fd);
-    server->client_fds = remove_fd_from_array(server->client_fds,
-        client_i, server->nfds);
-    server->nfds--;
-    return 1;
-}
+#include "../../include/server.h"
 
 static int send_help(server_t *server, int client_fd)
 {
@@ -54,6 +37,7 @@ int help_cmd(server_t *server, int client_i, char **tokens, int tks_len)
     int res = 0;
     int client_fd = server->client_fds[client_i].fd;
 
+    send_buff(client_fd, "214 Help message.\n");
     if (tks_len == 2)
         res = send_help_cmd(server, client_fd, tokens[1]);
     if (res == -1)

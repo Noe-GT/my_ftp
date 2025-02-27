@@ -12,4 +12,5 @@ void free_all(server_t *server)
     free_array(server->available_cmds);
     free_array(server->cmds_desc);
     free(server->msock_addr);
+    client_list_destroy(server->clients);
 }

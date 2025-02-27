@@ -11,9 +11,15 @@ SRC	=	src/main.c \
 		src/init.c \
 		src/free_all.c \
 		src/server.c \
-		src/read_from_socket.c \
-		src/commands.c \
+		src/manage_client.c \
+		src/commands/noop_cmd.c \
+		src/commands/user_cmd.c \
+		src/commands/pass_cmd.c \
+		src/commands/quit_cmd.c \
+		src/commands/help_cmd.c \
 		src/server_utils.c \
+		src/clients.c \
+		src/clients2.c \
 
 OBJ	=	$(SRC:src/%.c=bin/%.o)
 
@@ -21,9 +27,9 @@ CFLAGS	=	-g3 -W -Wall
 
 EXEC	=	myftp
 
-all:	compile_lib	$(EXEC)
+all:	compile_libs	$(EXEC)
 
-compile_lib:
+compile_libs:
 	make -C lib/my
 
 $(EXEC):	$(OBJ)
@@ -31,6 +37,7 @@ $(EXEC):	$(OBJ)
 
 bin/%.o:	src/%.c
 	@mkdir -p bin
+	@mkdir -p bin/commands
 	$(CC) -c $< -o $@ $(CFLAGS)
 
 clean:
@@ -44,4 +51,4 @@ fclean:	clean
 
 re:	fclean all
 
-.PHONY:	all compile_lib clean fclean re
+.PHONY:	all compile_libs clean fclean re

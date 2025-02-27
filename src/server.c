@@ -28,9 +28,12 @@ static int new_client(server_t *server)
         return 1;
     }
     printf("New client connection (%d)\n", new_fd);
+    server->clients = client_list_add_end(server->clients,
+        new_fd, server->nfds + 1);
     server->client_fds = add_fd_to_array(server->client_fds,
         new_fd, server->nfds);
     server->nfds++;
+    send_buff(new_fd, "220 Service ready for new user.\n");
     return 0;
 }
 
@@ -50,7 +53,7 @@ static int parse_clients(server_t *server)
         if (server->client_fds[i].fd == server->msock_fd) {
             new_client(server);
         } else {
-            read_from_socket(server, i);
+            manage_client(server, i);
         }
     }
     return 0;
@@ -58,10 +61,8 @@ static int parse_clients(server_t *server)
 
 static int loop(server_t *server)
 {
-    int timeout = 99999999;
-
     do {
-        if (poll(server->client_fds, server->nfds, timeout) < 0) {
+        if (poll(server->client_fds, server->nfds, -1) < 0) {
             perror("ERROR: poll failed");
             return -1;
         }

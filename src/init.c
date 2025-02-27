@@ -7,7 +7,7 @@
 
 #include "../include/ftp.h"
 
-void init_cmd_desc(server_t *server)
+static void init_cmd_desc(server_t *server)
 {
     server->available_cmds = (char **)malloc(sizeof(char *) * 3);
     server->cmds_desc = (char **)malloc(sizeof(char *) * 3);
@@ -38,4 +38,5 @@ void init(server_t *server, int port)
     memset(server->client_fds, 0, sizeof(*server->client_fds));
     server->client_fds[0].fd = server->msock_fd;
     server->client_fds[0].events = POLLIN;
+    server->clients = client_list_create();
 }
