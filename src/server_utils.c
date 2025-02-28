@@ -9,13 +9,11 @@
 
 int send_buff(int client_fd, char *buffer)
 {
-    int len = strlen(buffer);
-
-    if (write(client_fd, buffer, len) < 0) {
+    if (write(client_fd, buffer, strlen(buffer)) < 0) {
         perror("ERROR : write failed");
         return -1;
     }
-    return len;
+    return 0;
 }
 
 int create_socket(struct sockaddr_in *addr, socklen_t addrlen)

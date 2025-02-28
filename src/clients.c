@@ -56,6 +56,7 @@ client_t *client_list_create(void)
     list->fd = -1;
     list->id = -1;
     list->user = NULL;
+    list->user = NULL;
     list->serv_status = -1;
     return list;
 }
@@ -83,7 +84,8 @@ client_t *client_list_add_end(client_t *list, int fd, int id)
     new_node->id = id;
     new_node->user = NULL;
     new_node->next = NULL;
-    new_node->serv_status = PASSIVE;
+    new_node->user = NULL;
+    new_node->serv_status = NEEDUSER;
     while (parse->next != NULL)
         parse = parse->next;
     parse->next = new_node;

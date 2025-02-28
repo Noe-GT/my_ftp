@@ -12,14 +12,20 @@
 typedef enum serv_status_e {
     NEEDUSER,
     NEEDPASS,
+    NEUTRAL,
     PASSIVE,
     ACTIVE
 } serv_status_t;
 
+typedef struct user_s {
+    char *name;
+    char *pass;
+} user_t;
+
 typedef struct client_s {
     int fd;
     int id;
-    char *user;
+    user_t *user;
     struct client_s *next;
     serv_status_t serv_status;
 } client_t;
@@ -35,6 +41,8 @@ typedef struct server_s {
     struct pollfd *client_fds;
     int nfds;
     client_t *clients;
+    user_t **users;
+    int n_users;
 } server_t;
 
 client_t *client_list_create(void);
@@ -44,11 +52,11 @@ client_t *client_list_get_fd(client_t *list, int fd);
 client_t *client_list_remove(client_t *list, size_t pos);
 client_t *client_list_remove_fd(client_t *list, int fd);
 void client_list_destroy(client_t *clients);
-int quit_cmd(server_t *server, int client_i);
-int help_cmd(server_t *server, int client_i, char **tokens, int tks_len);
-int noop_cmd(int client_fd);
-int pass_cmd(server_t *server, char **tokens);
-int user_cmd(server_t *server, char **tokens);
+int quit_cmd(server_t *server, client_t *client);
+int help_cmd(server_t *server, client_t *client, char **tokens, int n_tokens);
+int noop_cmd(int client_fd, int n_tokens);
+int pass_cmd(client_t *client, char **tokens, int n_tokens);
+int user_cmd(server_t *server, client_t *client, char **tokens, int n_tokens);
 int manage_client(server_t *server, int client_i);
 int send_buff(int client_fd, char *buffer);
 struct pollfd *add_fd_to_array(struct pollfd *array, int new_fd, int a_size);

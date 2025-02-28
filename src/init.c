@@ -7,6 +7,17 @@
 
 #include "../include/ftp.h"
 
+static void init_users(server_t *server)
+{
+    user_t *usr1 = (user_t *)malloc(sizeof(user_t));
+
+    server->n_users = 1;
+    usr1->name = strdup("Anonymous");
+    usr1->pass = strdup("");
+    server->users = (user_t **)malloc(sizeof(user_t *) * server->n_users);
+    server->users[0] = usr1;
+}
+
 static void init_cmd_desc(server_t *server)
 {
     server->available_cmds = (char **)malloc(sizeof(char *) * 3);
@@ -39,4 +50,5 @@ void init(server_t *server, int port)
     server->client_fds[0].fd = server->msock_fd;
     server->client_fds[0].events = POLLIN;
     server->clients = client_list_create();
+    init_users(server);
 }
