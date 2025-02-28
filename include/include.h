@@ -17,5 +17,6 @@
     #include <arpa/inet.h>
     #include <poll.h>
     #include <stdbool.h>
+    #include <sys/stat.h>
 
 #endif /* !INCLUDE_H_ */

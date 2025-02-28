@@ -5,7 +5,7 @@
 ** clients2
 */
 
-#include "../include/server.h"
+#include "../../include/server.h"
 
 client_t *client_list_get_fd(client_t *list, int fd)
 {

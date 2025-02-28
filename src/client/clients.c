@@ -5,15 +5,15 @@
 ** client
 */
 
-#include "../include/server.h"
+#include "../../include/server.h"
 
 static void remove_elem(client_t *parse)
 {
     client_t *temp = parse->next;
 
     parse->next = parse->next->next;
-    if (temp->user != NULL)
-        free(temp->user);
+    if (parse->cwd != NULL)
+        free(parse->cwd);
     free(temp);
 }
 
@@ -57,6 +57,7 @@ client_t *client_list_create(void)
     list->id = -1;
     list->user = NULL;
     list->user = NULL;
+    list->cwd = NULL;
     list->serv_status = -1;
     return list;
 }
@@ -69,13 +70,13 @@ void client_list_destroy(client_t *clients)
     while (parse != NULL) {
         temp = parse;
         parse = parse->next;
-        if (parse->user != NULL)
-            free(parse->user);
+        if (parse->cwd != NULL)
+            free(parse->cwd);
         free(temp);
     }
 }
 
-client_t *client_list_add_end(client_t *list, int fd, int id)
+client_t *client_list_add_end(client_t *list, int fd, int id, char *cwd)
 {
     client_t *new_node = (client_t *)malloc(sizeof(client_t));
     client_t *parse = list;
@@ -85,7 +86,8 @@ client_t *client_list_add_end(client_t *list, int fd, int id)
     new_node->user = NULL;
     new_node->next = NULL;
     new_node->user = NULL;
-    new_node->serv_status = NEEDUSER;
+    new_node->serv_status = INITIAL_STATUS;
+    new_node->cwd = strdup(cwd);
     while (parse->next != NULL)
         parse = parse->next;
     parse->next = new_node;

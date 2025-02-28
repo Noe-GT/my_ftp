@@ -29,7 +29,7 @@ static int new_client(server_t *server)
     }
     printf("New client connection (%d)\n", new_fd);
     server->clients = client_list_add_end(server->clients,
-        new_fd, server->nfds + 1);
+        new_fd, server->nfds + 1, server->root_directory);
     server->client_fds = add_fd_to_array(server->client_fds,
         new_fd, server->nfds);
     server->nfds++;

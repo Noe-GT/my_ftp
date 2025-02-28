@@ -7,27 +7,25 @@
 
 #include "../include/ftp.h"
 
-// void test()
-// {
-//     char *client1 = (char *)malloc(sizeof(char) * 4);
-//     char *client2 = (char *)malloc(sizeof(char) * 4);
-//     char *client3 = (char *)malloc(sizeof(char) * 4);
-//     linkedList *list = list_create(client1, 0);
+bool directory_exists(const char *path)
+{
+    struct stat stats;
 
-//     list = list_add(list, 1, client2, 1);
-//     list = list_add_end(list, client3, 2);
-//     list_display(list);
-//     list = list_remove(list, 1);
-//     printf("\n");
-//     list_display(list);
-//     list = list_remove(list, 1);
-//     printf("\n");
-//     list_display(list);
-//     list = list_remove(list, 0);
-//     printf("\n");
-//     list_display(list);
-//     list_destroy(list);
-// }
+    stat(path, &stats);
+    if (S_ISDIR(stats.st_mode))
+        return true;
+    return false;
+}
+
+int set_root_direct(server_t *server, char *path)
+{
+    if (directory_exists(path)) {
+        server->root_directory = path;
+        return 0;
+    }
+    perror(path);
+    return -1;
+}
 
 int main(int ac, char **av)
 {
@@ -35,7 +33,12 @@ int main(int ac, char **av)
     int out;
 
     if (ac != 3) {
-        perror("Wrong number of arguments");
+        perror("Wrong number of arguments.");
+        free(server);
+        return 84;
+    }
+    if (set_root_direct(server, av[2]) < 0) {
+        free(server);
         return 84;
     }
     init(server, atoi(av[1]));

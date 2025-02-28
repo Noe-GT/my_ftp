@@ -17,9 +17,10 @@ SRC	=	src/main.c \
 		src/commands/pass_cmd.c \
 		src/commands/quit_cmd.c \
 		src/commands/help_cmd.c \
+		src/commands/pwd_cmd.c \
 		src/server_utils.c \
-		src/clients.c \
-		src/clients2.c \
+		src/client/clients.c \
+		src/client/clients2.c \
 
 OBJ	=	$(SRC:src/%.c=bin/%.o)
 
@@ -38,6 +39,7 @@ $(EXEC):	$(OBJ)
 bin/%.o:	src/%.c
 	@mkdir -p bin
 	@mkdir -p bin/commands
+	@mkdir -p bin/client
 	$(CC) -c $< -o $@ $(CFLAGS)
 
 clean:

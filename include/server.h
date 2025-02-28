@@ -8,14 +8,16 @@
 #ifndef SOCKET_H_
     #define SOCKET_H_
     #include "include.h"
+    #define INITIAL_STATUS TEST
 
-typedef enum serv_status_e {
-    NEEDUSER,
-    NEEDPASS,
-    NEUTRAL,
-    PASSIVE,
-    ACTIVE
-} serv_status_t;
+    typedef enum serv_status_e {
+        NEEDUSER,
+        NEEDPASS,
+        NEUTRAL,
+        PASSIVE,
+        ACTIVE,
+        TEST
+    } serv_status_t;
 
 typedef struct user_s {
     char *name;
@@ -28,6 +30,7 @@ typedef struct client_s {
     user_t *user;
     struct client_s *next;
     serv_status_t serv_status;
+    char *cwd;
 } client_t;
 
 typedef struct server_s {
@@ -43,10 +46,11 @@ typedef struct server_s {
     client_t *clients;
     user_t **users;
     int n_users;
+    char *root_directory;
 } server_t;
 
 client_t *client_list_create(void);
-client_t *client_list_add_end(client_t *list, int fd, int id);
+client_t *client_list_add_end(client_t *list, int fd, int id, char *cwd);
 size_t client_list_display(client_t *list);
 client_t *client_list_get_fd(client_t *list, int fd);
 client_t *client_list_remove(client_t *list, size_t pos);
@@ -57,6 +61,7 @@ int help_cmd(server_t *server, client_t *client, char **tokens, int n_tokens);
 int noop_cmd(int client_fd, int n_tokens);
 int pass_cmd(client_t *client, char **tokens, int n_tokens);
 int user_cmd(server_t *server, client_t *client, char **tokens, int n_tokens);
+int pwd_cmd(client_t *client, int n_tokens);
 int manage_client(server_t *server, int client_i);
 int send_buff(int client_fd, char *buffer);
 struct pollfd *add_fd_to_array(struct pollfd *array, int new_fd, int a_size);

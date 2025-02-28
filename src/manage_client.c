@@ -20,6 +20,8 @@ static int check_cmds(server_t *server, client_t *client,
         return user_cmd(server, client, tokens, n_tokens);
     if (strcmp(tokens[0], "PASS") == 0)
         return pass_cmd(client, tokens, n_tokens);
+    if (strcmp(tokens[0], "PWD") == 0)
+        return pwd_cmd(client, n_tokens);
     return send_buff(client->fd, "507 Invalid command.\n");
 }
 
