@@ -10,10 +10,11 @@
 static int check_cmds(server_t *server, client_t *client,
     char **tokens, int n_tokens)
 {
-    if (strcmp(tokens[0], "NOOP") == 0)
-        return noop_cmd(client->fd, n_tokens);
+    printf("cmd: %s | ntokens: %d\n", tokens[0], n_tokens);
     if (strcmp(tokens[0], "QUIT") == 0)
-        return quit_cmd(server, client);
+        return quit_cmd(server, client, n_tokens);
+    if (strcmp(tokens[0], "NOOP") == 0)
+        return noop_cmd(client->cmd_fd, n_tokens);
     if (strcmp(tokens[0], "HELP") == 0)
         return help_cmd(server, client, tokens, n_tokens);
     if (strcmp(tokens[0], "USER") == 0)
@@ -22,7 +23,11 @@ static int check_cmds(server_t *server, client_t *client,
         return pass_cmd(client, tokens, n_tokens);
     if (strcmp(tokens[0], "PWD") == 0)
         return pwd_cmd(client, n_tokens);
-    return send_buff(client->fd, "507 Invalid command.\n");
+    if (strcmp(tokens[0], "CWD") == 0)
+        return cwd_cmd(client, tokens, n_tokens);
+    if (strcmp(tokens[0], "PASV") == 0)
+        return pasv_cmd(server, client, n_tokens);
+    return error_notfound(client, tokens[0]);
 }
 
 char **tokenize(char *buffer)
@@ -52,21 +57,29 @@ char *read_from_socket(int client_fd)
     return buffer;
 }
 
-int manage_client(server_t *server, int client_i)
+int manage_commands(server_t *server, client_t *client)
 {
-    int client_fd = server->client_fds[client_i].fd;
-    client_t *client = client_list_get_fd(server->clients, client_fd);
-    char **tokens = tokenize(read_from_socket(client_fd));
+    char **tokens = tokenize(read_from_socket(client->cmd_fd));
     int n_tokens = 0;
 
-    client->id = client_i;
     if (tokens == NULL)
         return -1;
     n_tokens = my_array_len(tokens);
     if (n_tokens < 1) {
-        printf("Client %d entered an invalid command\n", client_fd);
+        printf("Client %d entered an invalid command\n", client->cmd_fd);
         free_array(tokens);
         return -1;
     }
     return check_cmds(server, client, tokens, n_tokens);
+}
+
+int manage_client(server_t *server, int client_i)
+{
+    int client_fd = server->client_fds[client_i].fd;
+    client_t *client = client_list_get_fd(server->clients, client_fd);
+
+    client->id = client_i;
+    if (client->serv_status != PASSIVE_PARENT)
+        return manage_commands(server, client);
+    return 0;
 }

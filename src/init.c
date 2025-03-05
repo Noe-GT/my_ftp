@@ -31,18 +31,16 @@ static void init_cmd_desc(server_t *server)
     server->cmds_desc[2] = NULL;
 }
 
-void init(server_t *server, int port)
+int init(server_t *server, int port)
 {
-    struct sockaddr_in *addr;
+    struct sockaddr_in *addr = make_addr(port);
 
     init_cmd_desc(server);
-    addr = (struct sockaddr_in *)malloc(sizeof(struct sockaddr_in));
-    addr->sin_family = AF_INET;
-    addr->sin_addr.s_addr = INADDR_ANY;
-    addr->sin_port = htons(port);
     server->msock_addrlen = sizeof(*addr);
     server->msock_addr = addr;
-    server->msock_fd = create_socket(addr, sizeof(*addr));
+    server->msock_fd = create_socket(addr, sizeof(*addr), 200);
+    if (server->msock_fd == -1)
+        return -1;
     server->stop_serv = false;
     server->nfds = 1;
     server->client_fds = (struct pollfd *)malloc(sizeof(struct pollfd) * 1);
@@ -51,4 +49,5 @@ void init(server_t *server, int port)
     server->client_fds[0].events = POLLIN;
     server->clients = client_list_create();
     init_users(server);
+    return 0;
 }

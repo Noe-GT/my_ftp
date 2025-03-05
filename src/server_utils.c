@@ -16,7 +16,27 @@ int send_buff(int client_fd, char *buffer)
     return 0;
 }
 
-int create_socket(struct sockaddr_in *addr, socklen_t addrlen)
+struct sockaddr_in *make_addr(int port)
+{
+    struct sockaddr_in *addr;
+
+    addr = (struct sockaddr_in *)malloc(sizeof(struct sockaddr_in));
+    addr->sin_family = AF_INET;
+    addr->sin_addr.s_addr = INADDR_ANY;
+    addr->sin_port = htons(port);
+    return addr;
+}
+
+static int socket_listen(int sockfd, int listen_n)
+{
+    if (listen(sockfd, listen_n) < 0) {
+        perror("Socket_listen");
+        return -1;
+    }
+    return sockfd;
+}
+
+int create_socket(struct sockaddr_in *addr, socklen_t addrlen, int listen_n)
 {
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     int on = 1;
@@ -36,7 +56,7 @@ int create_socket(struct sockaddr_in *addr, socklen_t addrlen)
         close(sockfd);
         return -1;
     }
-    return sockfd;
+    return socket_listen(sockfd, listen_n);
 }
 
 struct pollfd *add_fd_to_array(struct pollfd *array, int new_fd, int a_size)

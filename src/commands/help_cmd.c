@@ -37,14 +37,15 @@ int help_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
     int res = 0;
 
     if (n_tokens != 1)
-        return send_buff(client->fd, "511 wrong number of parameters.\n");
-    if (send_buff(client->fd, "214 Help message.\n") < 0)
+        return error_parameters(client, "HELP");
+    if (send_buff(client->cmd_fd,
+        "214-The following commands are recognized:\n") < 0)
         return -1;
     if (n_tokens == 2)
-        res = send_help_cmd(server, client->fd, tokens[1]);
+        res = send_help_cmd(server, client->cmd_fd, tokens[1]);
     if (res == -1)
         return -1;
     if (res > 1)
         return 0;
-    return send_help(server, client->fd);
+    return send_help(server, client->cmd_fd);
 }

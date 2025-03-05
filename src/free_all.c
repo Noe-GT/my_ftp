@@ -25,3 +25,9 @@ void free_all(server_t *server)
     client_list_destroy(server->clients);
     free_users(server->users);
 }
+
+void free_passive(server_t *server)
+{
+    free_users(server->users);
+    client_list_destroy(server->clients);
+}

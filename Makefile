@@ -18,9 +18,15 @@ SRC	=	src/main.c \
 		src/commands/quit_cmd.c \
 		src/commands/help_cmd.c \
 		src/commands/pwd_cmd.c \
+		src/commands/pasv_cmd.c \
+		src/commands/list_cmd.c \
+		src/commands/cwd_cmd.c \
+		src/modes.c \
+		src/errors.c \
 		src/server_utils.c \
 		src/client/clients.c \
 		src/client/clients2.c \
+		src/system_utils.c \
 
 OBJ	=	$(SRC:src/%.c=bin/%.o)
 

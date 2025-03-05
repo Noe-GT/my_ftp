@@ -7,16 +7,6 @@
 
 #include "../include/ftp.h"
 
-bool directory_exists(const char *path)
-{
-    struct stat stats;
-
-    stat(path, &stats);
-    if (S_ISDIR(stats.st_mode))
-        return true;
-    return false;
-}
-
 int set_root_direct(server_t *server, char *path)
 {
     if (directory_exists(path)) {
@@ -30,7 +20,7 @@ int set_root_direct(server_t *server, char *path)
 int main(int ac, char **av)
 {
     server_t *server = (server_t *)malloc(sizeof(server_t));
-    int out;
+    int out = -1;
 
     if (ac != 3) {
         perror("Wrong number of arguments.");
@@ -41,8 +31,8 @@ int main(int ac, char **av)
         free(server);
         return 84;
     }
-    init(server, atoi(av[1]));
-    out = run_server(server);
+    if (init(server, atoi(av[1])) == 0)
+        out = run_server(server);
     free_all(server);
     if (out == -1)
         return 84;

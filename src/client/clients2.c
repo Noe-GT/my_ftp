@@ -12,7 +12,7 @@ client_t *client_list_get_fd(client_t *list, int fd)
     client_t *parse = list;
 
     while (parse != NULL) {
-        if (parse->fd == fd)
+        if (parse->cmd_fd == fd)
             return parse;
         parse = parse->next;
     }
@@ -26,8 +26,10 @@ static char *get_status(client_t *client)
         return "NEEDUSER";
     case NEEDPASS:
         return "NEEDPASS";
-    case PASSIVE:
-        return "PASSIVE";
+    case PASSIVE_CHILD:
+        return "PASSIVE_CHILD";
+    case PASSIVE_PARENT:
+        return "PASSIVE_PARENT";
     case ACTIVE:
         return "ACTIVE";
     default:
@@ -43,7 +45,7 @@ size_t client_list_display(client_t *list)
     if (parse == NULL)
         printf("(nothing to display)\n");
     while (parse != NULL) {
-        printf("Client %d (fd:%d) (status:%s)\n", parse->id, parse->fd,
+        printf("Client %d (fd:%d) (status:%s)\n", parse->id, parse->cmd_fd,
             get_status(parse));
         count++;
         parse = parse->next;

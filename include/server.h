@@ -7,31 +7,10 @@
 
 #ifndef SOCKET_H_
     #define SOCKET_H_
-    #include "include.h"
-    #define INITIAL_STATUS TEST
-
-    typedef enum serv_status_e {
-        NEEDUSER,
-        NEEDPASS,
-        NEUTRAL,
-        PASSIVE,
-        ACTIVE,
-        TEST
-    } serv_status_t;
-
-typedef struct user_s {
-    char *name;
-    char *pass;
-} user_t;
-
-typedef struct client_s {
-    int fd;
-    int id;
-    user_t *user;
-    struct client_s *next;
-    serv_status_t serv_status;
-    char *cwd;
-} client_t;
+    #include "errors.h"
+    #include "shared.h"
+    #include "client.h"
+    #define INITIAL_STATUS NEEDUSER
 
 typedef struct server_s {
     bool stop_serv;
@@ -49,22 +28,25 @@ typedef struct server_s {
     char *root_directory;
 } server_t;
 
-client_t *client_list_create(void);
-client_t *client_list_add_end(client_t *list, int fd, int id, char *cwd);
-size_t client_list_display(client_t *list);
-client_t *client_list_get_fd(client_t *list, int fd);
-client_t *client_list_remove(client_t *list, size_t pos);
-client_t *client_list_remove_fd(client_t *list, int fd);
-void client_list_destroy(client_t *clients);
-int quit_cmd(server_t *server, client_t *client);
+int create_socket(struct sockaddr_in *addr, socklen_t addrlen, int listen_n);
+int run_server(server_t *server);
+int quit_cmd(server_t *server, client_t *client, int n_tokens);
 int help_cmd(server_t *server, client_t *client, char **tokens, int n_tokens);
 int noop_cmd(int client_fd, int n_tokens);
 int pass_cmd(client_t *client, char **tokens, int n_tokens);
 int user_cmd(server_t *server, client_t *client, char **tokens, int n_tokens);
 int pwd_cmd(client_t *client, int n_tokens);
+int pasv_cmd(server_t *server, client_t *client, int n_tokens);
+int list_cmd(server_t *server, client_t *client, char **tokens, int n_tokens);
+int cwd_cmd(client_t *client, char **tokens, int n_tokens);
 int manage_client(server_t *server, int client_i);
+int manage_commands(server_t *server, client_t *client);
 int send_buff(int client_fd, char *buffer);
 struct pollfd *add_fd_to_array(struct pollfd *array, int new_fd, int a_size);
 struct pollfd *remove_fd_from_array(struct pollfd *array,
     int elemi, int arr_s);
+struct sockaddr_in *make_addr(int port);
+int passive_mode(server_t *server, client_t *client);
+void free_passive(server_t *server);
+bool directory_exists(const char *path);
 #endif /* !SOCKET_H_ */

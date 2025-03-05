@@ -10,8 +10,6 @@
     #include "server.h"
     #include "my.h"
 
-void init(server_t *server, int port);
+int init(server_t *server, int port);
 void free_all(server_t *server);
-int create_socket(struct sockaddr_in *addr, socklen_t addrlen);
-int run_server(server_t *server);
 #endif /* !FTP_H_ */

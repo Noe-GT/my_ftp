@@ -16,20 +16,30 @@ user_t *check_user(server_t *server, char *user_name)
     return NULL;
 }
 
+static int pass_message(client_t *client, char *user)
+{
+    char *error_buff = malloc(sizeof(char) * (strlen(user) + 28));
+    int out;
+
+    sprintf(error_buff, "331 Password required for %s\n", user);
+    out = send_buff(client->cmd_fd, error_buff);
+    free(error_buff);
+    return out;
+}
+
 int user_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
 {
     user_t *user;
 
     if (n_tokens != 2)
-        return send_buff(client->fd, "511 wrong number of parameters.\n");
+        return error_parameters(client, "USER");
+    printf("satus : %d\n", client->serv_status);
     if (client->serv_status != NEEDUSER)
-        return send_buff(client->fd, "506 command not available.\n");
+        return error_notfound(client, "USER");
     user = check_user(server, tokens[1]);
-    if (user == NULL)
-        return send_buff(client->fd, "512 Invalid username.\n");
     client->user = user;
     client->serv_status = NEEDPASS;
-    if (send_buff(client->fd, "331 User name okay, need password.\n") < 0)
+    if (pass_message(client, tokens[1]) < 0)
         return -1;
     return 0;
 }
