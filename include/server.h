@@ -39,6 +39,7 @@ int pwd_cmd(client_t *client, int n_tokens);
 int pasv_cmd(server_t *server, client_t *client, int n_tokens);
 int list_cmd(server_t *server, client_t *client, char **tokens, int n_tokens);
 int cwd_cmd(client_t *client, char **tokens, int n_tokens);
+int cdup_cmd(client_t *client, int n_tokens);
 int manage_client(server_t *server, int client_i);
 int manage_commands(server_t *server, client_t *client);
 int send_buff(int client_fd, char *buffer);

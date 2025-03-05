@@ -7,12 +7,7 @@
 
 #include "../../include/server.h"
 
-static int change_relative(client_t *client, char *path)
-{
-    return 0;
-}
-
-static int change_absolute(client_t *client, char *path)
+static int change_direct(client_t *client, char *path)
 {
     if (directory_exists(path)) {
         free(client->cwd);
@@ -31,13 +26,8 @@ int cwd_cmd(client_t *client, char **tokens, int n_tokens)
     if (client->serv_status != TEST &&
         (client->serv_status == NEEDUSER || client->serv_status == NEEDPASS))
         return error_login(client);
-    if (tokens[1][0] == '/') {
-        if (change_absolute(client, tokens[1]) < 0)
-            return -1;
-    } else {
-        if (change_relative(client, tokens[1]) < 0)
-            return -1;
-    }
+    if (change_direct(client, tokens[1]) < 0)
+        return -1;
     if (send_buff(client->cmd_fd,
         "250 Requested file action okay, completed.\n") < 0)
         return -1;

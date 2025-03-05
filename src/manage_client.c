@@ -24,6 +24,8 @@ static int check_cmds(server_t *server, client_t *client,
         return pwd_cmd(client, n_tokens);
     if (strcmp(tokens[0], "CWD") == 0)
         return cwd_cmd(client, tokens, n_tokens);
+    if (strcmp(tokens[0], "CDUP") == 0)
+        return cdup_cmd(client, n_tokens);
     if (strcmp(tokens[0], "PASV") == 0)
         return pasv_cmd(server, client, n_tokens);
     return error_notfound(client, tokens[0]);
