@@ -10,7 +10,6 @@
 static int check_cmds(server_t *server, client_t *client,
     char **tokens, int n_tokens)
 {
-    printf("cmd: %s | ntokens: %d\n", tokens[0], n_tokens);
     if (strcmp(tokens[0], "QUIT") == 0)
         return quit_cmd(server, client, n_tokens);
     if (strcmp(tokens[0], "NOOP") == 0)
