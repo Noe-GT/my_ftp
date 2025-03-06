@@ -84,8 +84,8 @@ client_t *client_list_add_end(client_t *list, int fd, int id, char *cwd)
     client_t *parse = list;
 
     new_node->cmd_fd = fd;
-    list->c_transfer_fd = -1;
-    list->s_transfer_fd = -1;
+    new_node->c_transfer_fd = -1;
+    new_node->s_transfer_fd = -1;
     new_node->id = id;
     new_node->user = NULL;
     new_node->next = NULL;

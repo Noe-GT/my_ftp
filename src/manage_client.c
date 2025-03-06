@@ -11,7 +11,7 @@ static int check_cmds(server_t *server, client_t *client,
     char **tokens, int n_tokens)
 {
     if (strcmp(tokens[0], "QUIT") == 0)
-        return quit_cmd(server, client, n_tokens);
+        return quit_cmd(server, client);
     if (strcmp(tokens[0], "NOOP") == 0)
         return noop_cmd(client->cmd_fd, n_tokens);
     if (strcmp(tokens[0], "HELP") == 0)
@@ -27,7 +27,9 @@ static int check_cmds(server_t *server, client_t *client,
     if (strcmp(tokens[0], "CDUP") == 0)
         return cdup_cmd(client, n_tokens);
     if (strcmp(tokens[0], "PASV") == 0)
-        return pasv_cmd(server, client, n_tokens);
+        return pasv_cmd(client, n_tokens);
+    if (strcmp(tokens[0], "LIST") == 0)
+        return list_cmd(server, client, tokens, n_tokens);
     return error_notfound(client, tokens[0]);
 }
 
@@ -80,7 +82,5 @@ int manage_client(server_t *server, int client_i)
     client_t *client = client_list_get_fd(server->clients, client_fd);
 
     client->id = client_i;
-    if (client->serv_status != PASSIVE_PARENT)
-        return manage_commands(server, client);
-    return 0;
+    return manage_commands(server, client);
 }

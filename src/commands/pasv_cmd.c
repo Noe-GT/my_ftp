@@ -15,7 +15,7 @@ static int set_passive(client_t *client)
     return client->s_transfer_fd;
 }
 
-int pasv_cmd(server_t *server, client_t *client, int n_tokens)
+int pasv_cmd(client_t *client, int n_tokens)
 {
     if (n_tokens != 1)
         return error_parameters(client, "PASV");
@@ -26,8 +26,10 @@ int pasv_cmd(server_t *server, client_t *client, int n_tokens)
         client->serv_status != ACTIVE &&
         client->serv_status != TEST)
         return send_buff(client->cmd_fd, "506 command not available.\n");
-    if (set_passive(client) < 0)
+    if (set_passive(client) < 0) {
+        perror("quit");
         return -1;
+    }
     client->serv_status = PASSIVE_PARENT;
     if (send_buff(client->cmd_fd,
         "227 Entering Passive Mode (h1,h2,h3,h4,p1,p2).\n") < 0)

@@ -7,17 +7,20 @@
 
 #include "../../include/server.h"
 
-int quit_cmd(server_t *server, client_t *client, int n_tokens)
+int quit_cmd(server_t *server, client_t *client)
 {
+    int temp = (int)client->cmd_fd;
+
     send_buff(client->cmd_fd, "221 Goodbye.\n");
-    if (close(client->cmd_fd) < 0) {
-        fprintf(stderr, "%d: %s\n", client->cmd_fd, errno);
-        return -1;
-    }
-    printf("Client socket '%d' closed\n", client->cmd_fd);
+    free_pasv(client);
     server->client_fds = remove_fd_from_array(server->client_fds,
         client->id, server->nfds);
+    if (close(client->cmd_fd) < 0) {
+        perror("QUIT");
+        return -1;
+    }
     server->clients = client_list_remove_fd(server->clients, client->cmd_fd);
-        server->nfds--;
+    server->nfds--;
+    printf("Client socket (%d) closed\n", temp);
     return 1;
 }

@@ -10,6 +10,7 @@
 int list_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
 {
     int fout;
+    (void)server;
 
     send_buff(client->cmd_fd, "000 test list.\n");
     fout = passive_mode(server, client);

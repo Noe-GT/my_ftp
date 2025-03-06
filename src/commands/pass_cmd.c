@@ -27,8 +27,6 @@ static int check_pass(client_t *client, char *password, int n_tokens)
 
 int pass_cmd(client_t *client, char **tokens, int n_tokens)
 {
-    int is_pass;
-
     if (n_tokens > 2)
         return error_parameters(client, "PASS");
     if (client->serv_status != NEEDPASS)

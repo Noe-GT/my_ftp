@@ -7,12 +7,25 @@
 
 #include "../include/server.h"
 
-void free_pasv(client_t *client)
+int free_pasv(client_t *client)
 {
-    if (client->c_transfer_fd != -1)
-        close(client->c_transfer_fd);
-    if (client->s_transfer_fd != -1)
-        close(client->s_transfer_fd);
+    int out1 = 0;
+    int out2 = 0;
+
+    if (client->c_transfer_fd != -1) {
+        out1 = close(client->c_transfer_fd);
+        if (out1 < 0)
+            perror("c_transfer_fd");
+        client->c_transfer_fd = -1;
+    }
+    if (client->s_transfer_fd != -1) {
+        out2 = close(client->s_transfer_fd);
+        if (out2 < 0)
+            perror("s_transfer_fd");
+        client->s_transfer_fd = -1;
+    }
+    if (out1 < 0 || out2 < 0)
+        return -1;
 }
 
 int connect_trans_sock(client_t *client)
@@ -55,6 +68,6 @@ int passive_mode(server_t *server, client_t *client)
     } else {
         send_buff(client->cmd_fd, "I am parent.\n");
         client->serv_status = PASSIVE_PARENT;
-        return out;
     }
+    return out;
 }
