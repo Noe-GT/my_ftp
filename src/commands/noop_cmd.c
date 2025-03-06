@@ -7,7 +7,7 @@
 
 #include "../../include/server.h"
 
-int noop_cmd(int client_fd, int n_tokens)
+int noop_cmd(int client_fd)
 {
     if (send_buff(client_fd, "200 NOOP command successful\n") == -1)
         return -1;

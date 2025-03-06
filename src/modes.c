@@ -26,6 +26,7 @@ int free_pasv(client_t *client)
     }
     if (out1 < 0 || out2 < 0)
         return -1;
+    return 0;
 }
 
 int connect_trans_sock(client_t *client)

@@ -7,13 +7,21 @@
 
 #include "../include/ftp.h"
 
+static int check_file_cmds(server_t *server, client_t *client,
+    char **tokens, int n_tokens)
+{
+    if (strcmp(tokens[0], "LIST") == 0)
+        return list_cmd(server, client, tokens, n_tokens);
+    return error_notfound(client, tokens[0]);
+}
+
 static int check_cmds(server_t *server, client_t *client,
     char **tokens, int n_tokens)
 {
     if (strcmp(tokens[0], "QUIT") == 0)
         return quit_cmd(server, client);
     if (strcmp(tokens[0], "NOOP") == 0)
-        return noop_cmd(client->cmd_fd, n_tokens);
+        return noop_cmd(client->cmd_fd);
     if (strcmp(tokens[0], "HELP") == 0)
         return help_cmd(server, client, tokens, n_tokens);
     if (strcmp(tokens[0], "USER") == 0)
@@ -28,9 +36,7 @@ static int check_cmds(server_t *server, client_t *client,
         return cdup_cmd(client, n_tokens);
     if (strcmp(tokens[0], "PASV") == 0)
         return pasv_cmd(client, n_tokens);
-    if (strcmp(tokens[0], "LIST") == 0)
-        return list_cmd(server, client, tokens, n_tokens);
-    return error_notfound(client, tokens[0]);
+    return check_file_cmds(server, client, tokens, n_tokens);
 }
 
 char **tokenize(char *buffer)

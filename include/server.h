@@ -32,7 +32,7 @@ int create_socket(struct sockaddr_in *addr, socklen_t addrlen, int listen_n);
 int run_server(server_t *server);
 int quit_cmd(server_t *server, client_t *client);
 int help_cmd(server_t *server, client_t *client, char **tokens, int n_tokens);
-int noop_cmd(int client_fd, int n_tokens);
+int noop_cmd(int client_fd);
 int pass_cmd(client_t *client, char **tokens, int n_tokens);
 int user_cmd(server_t *server, client_t *client, char **tokens, int n_tokens);
 int pwd_cmd(client_t *client, int n_tokens);
