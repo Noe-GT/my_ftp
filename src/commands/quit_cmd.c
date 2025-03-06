@@ -15,7 +15,7 @@ int quit_cmd(server_t *server, client_t *client)
     free_pasv(client);
     server->client_fds = remove_fd_from_array(server->client_fds,
         client->id, server->nfds);
-    if (close(client->cmd_fd) < 0) {
+    if (shutdown(client->cmd_fd, SHUT_RDWR) < 0) {
         perror("QUIT");
         return -1;
     }

@@ -50,6 +50,7 @@ static int pasv_child(server_t *server, client_t *client, int out)
     client->serv_status = PASSIVE_CHILD;
     server->stop_serv = true;
     if (connect_trans_sock(client) < 0) {
+        perror("pasv_child");
         free_pasv(client);
         return -1;
     }
@@ -65,7 +66,7 @@ int passive_mode(server_t *server, client_t *client)
         send_buff(client->cmd_fd, "508 Fork failed.\n");
         return -1;
     } else if (out == 0) {
-        pasv_child(server, client, out);
+        return pasv_child(server, client, out);
     } else {
         send_buff(client->cmd_fd, "I am parent.\n");
         client->serv_status = PASSIVE_PARENT;

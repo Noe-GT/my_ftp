@@ -22,6 +22,7 @@ SRC	=	src/main.c \
 		src/commands/list_cmd.c \
 		src/commands/cwd_cmd.c \
 		src/commands/cdup_cmd.c \
+		src/commands/dele_cmd.c \
 		src/modes.c \
 		src/errors.c \
 		src/server_utils.c \
