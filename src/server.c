@@ -15,24 +15,33 @@ static void close_client_socks(server_t *server)
     }
 }
 
+static int add_client(server_t *server, int new_fd, struct sockaddr_in *addr)
+{
+    client_t *new_client = client_create(new_fd, server->nfds + 1,
+        server->root_directory, addr);
+
+    server->clients = client_list_add_end(server->clients, new_client);
+    server->client_fds = add_fd_to_array(server->client_fds,
+        new_fd, server->nfds);
+    server->nfds++;
+}
+
 static int new_client(server_t *server)
 {
-    int new_fd;
+    struct sockaddr_in *addr = make_addr(server->mport);
+    socklen_t addr_len = sizeof(addr);
+    int new_fd = accept(server->msock_fd, (struct sockaddr*)addr, &addr_len);
 
-    new_fd = accept(server->msock_fd, NULL, NULL);
     if (new_fd < 0) {
         if (errno != EWOULDBLOCK) {
             perror("ERROR: accept failed");
             server->stop_serv = true;
         }
+        free(addr);
         return 1;
     }
+    add_client(server, new_fd, addr);
     printf("New client connection (%d)\n", new_fd);
-    server->clients = client_list_add_end(server->clients,
-        new_fd, server->nfds + 1, server->root_directory);
-    server->client_fds = add_fd_to_array(server->client_fds,
-        new_fd, server->nfds);
-    server->nfds++;
     send_buff(new_fd, "220 FTP Server ready.\n");
     return 0;
 }

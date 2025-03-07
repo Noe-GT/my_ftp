@@ -15,14 +15,17 @@ typedef struct client_s {
     int c_transfer_fd;
     int s_transfer_fd;
     int id;
+    struct sockaddr_in *transfer_addr;
     user_t *user;
     struct client_s *next;
     serv_status_t serv_status;
     char *cwd;
 } client_t;
 
+client_t *client_create(int fd, int id, char *cwd,
+    struct sockaddr_in *addr);
 client_t *client_list_create(void);
-client_t *client_list_add_end(client_t *list, int fd, int id, char *cwd);
+client_t *client_list_add_end(client_t *list, client_t *client);
 size_t client_list_display(client_t *list);
 client_t *client_list_get_fd(client_t *list, int fd);
 client_t *client_list_remove(client_t *list, size_t pos);

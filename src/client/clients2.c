@@ -52,3 +52,33 @@ size_t client_list_display(client_t *list)
     }
     return count;
 }
+
+client_t *client_list_create(void)
+{
+    client_t *list = (client_t *)malloc(sizeof(client_t));
+
+    list->next = NULL;
+    list->cmd_fd = -1;
+    list->c_transfer_fd = -1;
+    list->s_transfer_fd = -1;
+    list->id = -1;
+    list->user = NULL;
+    list->user = NULL;
+    list->cwd = NULL;
+    list->serv_status = NONE;
+    return list;
+}
+
+void client_list_destroy(client_t *clients)
+{
+    client_t *parse = clients;
+    client_t *temp = NULL;
+
+    while (parse != NULL) {
+        temp = parse;
+        parse = parse->next;
+        if (parse->cwd != NULL)
+            free(parse->cwd);
+        free(temp);
+    }
+}

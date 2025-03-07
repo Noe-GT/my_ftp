@@ -36,6 +36,7 @@ int init(server_t *server, int port)
     struct sockaddr_in *addr = make_addr(port);
 
     init_cmd_desc(server);
+    server->mport = port;
     server->msock_addrlen = sizeof(*addr);
     server->msock_addr = addr;
     server->msock_fd = create_socket(addr, sizeof(*addr), 200);

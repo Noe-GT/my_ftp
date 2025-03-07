@@ -15,25 +15,36 @@ static int set_passive(client_t *client)
     return client->s_transfer_fd;
 }
 
+static int pasv_print(client_t *client, char *ip, int port)
+{
+    char *ip_parse = strtok(ip, ".");
+
+    if (dprintf(client->cmd_fd, "227 Entering Passive Mode (") < 0)
+        return -1;
+    while (ip_parse != NULL) {
+        if (dprintf(client->cmd_fd, "%s,", ip_parse) < 0)
+            return -1;
+        ip_parse = strtok(NULL, ".");
+    }
+    if (dprintf(client->cmd_fd, "%d,%d).\n", port / 256, port % 256) < 0)
+        return -1;
+    return 0;
+}
+
 static int pasv_message(client_t *client)
 {
     char ip[16];
     unsigned int port;
     struct sockaddr_in addr;
+    struct sockaddr_in caddr = *client->transfer_addr;
     socklen_t len;
-    char *ip_parse;
 
     bzero(&addr, sizeof(addr));
     len = sizeof(addr);
     getsockname(client->s_transfer_fd, (struct sockaddr *) &addr, &len);
-    inet_ntop(AF_INET, &addr.sin_addr, ip, sizeof(ip));
     port = ntohs(addr.sin_port);
-    ip_parse = strtok(ip, ".");
-    if (dprintf(client->cmd_fd,
-        "227 Entering Passive Mode (%s,%s,%s,%s,%d,%d).\n",
-        ip_parse, ip_parse, ip_parse, ip_parse, port / 256, port % 256) < 0)
-        return -1;
-    return 0;
+    inet_ntop(AF_INET, &caddr.sin_addr, ip, sizeof(ip));
+    return pasv_print(client, ip, port);
 }
 
 int pasv_cmd(client_t *client, int n_tokens)

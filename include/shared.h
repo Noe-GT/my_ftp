@@ -10,6 +10,7 @@
     #include "include.h"
 
 typedef enum serv_status_e {
+    NONE,
     NEEDUSER,
     NEEDPASS,
     NEUTRAL,

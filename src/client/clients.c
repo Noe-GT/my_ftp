@@ -14,6 +14,8 @@ static void remove_elem(client_t *parse)
     parse->next = parse->next->next;
     if (parse->cwd != NULL)
         free(parse->cwd);
+    if (parse->transfer_addr != NULL)
+        free(parse->transfer_addr);
     free(temp);
 }
 
@@ -48,52 +50,30 @@ client_t *client_list_remove_fd(client_t *list, int fd)
     return list;
 }
 
-client_t *client_list_create(void)
+client_t *client_list_add_end(client_t *list, client_t *client)
 {
-    client_t *list = (client_t *)malloc(sizeof(client_t));
-
-    list->next = NULL;
-    list->cmd_fd = -1;
-    list->c_transfer_fd = -1;
-    list->s_transfer_fd = -1;
-    list->id = -1;
-    list->user = NULL;
-    list->user = NULL;
-    list->cwd = NULL;
-    list->serv_status = -1;
-    return list;
-}
-
-void client_list_destroy(client_t *clients)
-{
-    client_t *parse = clients;
-    client_t *temp = NULL;
-
-    while (parse != NULL) {
-        temp = parse;
-        parse = parse->next;
-        if (parse->cwd != NULL)
-            free(parse->cwd);
-        free(temp);
-    }
-}
-
-client_t *client_list_add_end(client_t *list, int fd, int id, char *cwd)
-{
-    client_t *new_node = (client_t *)malloc(sizeof(client_t));
     client_t *parse = list;
 
-    new_node->cmd_fd = fd;
-    new_node->c_transfer_fd = -1;
-    new_node->s_transfer_fd = -1;
-    new_node->id = id;
-    new_node->user = NULL;
-    new_node->next = NULL;
-    new_node->user = NULL;
-    new_node->serv_status = INITIAL_STATUS;
-    new_node->cwd = strdup(cwd);
     while (parse->next != NULL)
         parse = parse->next;
-    parse->next = new_node;
+    parse->next = client;
     return list;
+}
+
+client_t *client_create(int fd, int id, char *cwd,
+    struct sockaddr_in *addr)
+{
+    client_t *client = (client_t *)malloc(sizeof(client_t));
+
+    client->cmd_fd = fd;
+    client->c_transfer_fd = -1;
+    client->s_transfer_fd = -1;
+    client->id = id;
+    client->user = NULL;
+    client->next = NULL;
+    client->user = NULL;
+    client->serv_status = INITIAL_STATUS;
+    client->cwd = strdup(cwd);
+    client->transfer_addr = addr;
+    return client;
 }

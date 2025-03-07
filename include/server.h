@@ -16,6 +16,7 @@ typedef struct server_s {
     bool stop_serv;
     struct sockaddr_in *msock_addr;
     int msock_fd;
+    int mport;
     socklen_t msock_addrlen;
     int *sockets;
     char **available_cmds;
