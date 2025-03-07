@@ -17,7 +17,7 @@ static void close_client_socks(server_t *server)
 
 static int add_client(server_t *server, int new_fd, struct sockaddr_in *addr)
 {
-    client_t *new_client = client_create(new_fd, server->nfds + 1,
+    client_t *new_client = client_list_create_elem(new_fd, server->nfds + 1,
         server->root_directory, addr);
 
     server->clients = client_list_add_end(server->clients, new_client);
@@ -46,24 +46,32 @@ static int new_client(server_t *server)
     return 0;
 }
 
+static int check_event(server_t *server, int i)
+{
+    if (server->client_fds[i].revents == POLLERR ||
+        server->client_fds[i].revents == POLLHUP ||
+        server->client_fds[i].revents == POLLNVAL) {
+        printf("Error: client %d - bad revents (%d)\n", i,
+            server->client_fds[i].revents);
+        client_remove(server, client_list_get_fd(server->clients,
+            server->client_fds[i].fd));
+        return -1;
+    }
+    if (server->client_fds[i].revents == POLLIN) {
+        if (server->client_fds[i].fd == server->msock_fd)
+            new_client(server);
+        else
+            manage_client(server, i);
+    }
+    return 0;
+}
+
 static int parse_clients(server_t *server)
 {
     int clientn = server->nfds;
 
     for (int i = 0; i < clientn && server->stop_serv == false; i++) {
-        if (server->client_fds[i].revents == 0)
-            continue;
-        if (server->client_fds[i].revents != POLLIN) {
-            printf("Error: client %d - bad revents (%d)\n", i,
-                server->client_fds[i].revents);
-            server->stop_serv = true;
-            return -1;
-        }
-        if (server->client_fds[i].fd == server->msock_fd) {
-            new_client(server);
-        } else {
-            manage_client(server, i);
-        }
+        check_event(server, i);
     }
     return 0;
 }

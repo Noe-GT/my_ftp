@@ -77,7 +77,7 @@ void client_list_destroy(client_t *clients)
     while (parse != NULL) {
         temp = parse;
         parse = parse->next;
-        if (parse->cwd != NULL)
+        if (parse && parse->cwd != NULL)
             free(parse->cwd);
         free(temp);
     }

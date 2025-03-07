@@ -52,4 +52,5 @@ struct sockaddr_in *make_addr(int port);
 int passive_mode(server_t *server, client_t *client);
 void free_passive(server_t *server);
 bool directory_exists(const char *path);
+int client_remove(server_t *server, client_t *client);
 #endif /* !SOCKET_H_ */

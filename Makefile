@@ -27,7 +27,8 @@ SRC	=	src/main.c \
 		src/errors.c \
 		src/server_utils.c \
 		src/client/clients.c \
-		src/client/clients2.c \
+		src/client/client_list.c \
+		src/client/client_list2.c \
 		src/system_utils.c \
 
 OBJ	=	$(SRC:src/%.c=bin/%.o)

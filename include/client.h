@@ -22,7 +22,7 @@ typedef struct client_s {
     char *cwd;
 } client_t;
 
-client_t *client_create(int fd, int id, char *cwd,
+client_t *client_list_create_elem(int fd, int id, char *cwd,
     struct sockaddr_in *addr);
 client_t *client_list_create(void);
 client_t *client_list_add_end(client_t *list, client_t *client);
