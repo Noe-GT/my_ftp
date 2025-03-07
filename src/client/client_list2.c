@@ -61,6 +61,7 @@ client_t *client_list_create(void)
     list->cmd_fd = -1;
     list->c_transfer_fd = -1;
     list->s_transfer_fd = -1;
+    list->transfer_addr = NULL;
     list->id = -1;
     list->user = NULL;
     list->user = NULL;

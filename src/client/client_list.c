@@ -37,13 +37,16 @@ client_t *client_list_remove(client_t *list, size_t pos)
 client_t *client_list_remove_fd(client_t *list, int fd)
 {
     client_t *parse = list;
-    client_t *temp = parse;
+    client_t *temp = NULL;
 
     if (parse == NULL)
         return NULL;
     while (parse != NULL) {
-        if (parse->cmd_fd == fd)
+        printf("fd : %d\n", parse->cmd_fd);
+        if (parse->cmd_fd == fd) {
             remove_elem(temp);
+            return list;
+        }
         temp = parse;
         parse = parse->next;
     }
@@ -56,6 +59,7 @@ client_t *client_list_add_end(client_t *list, client_t *client)
 
     while (parse->next != NULL)
         parse = parse->next;
+    client->next = NULL;
     parse->next = client;
     return list;
 }

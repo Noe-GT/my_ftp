@@ -7,3 +7,6 @@ bin/
 test.c
 test2.c
 vgcore*
+lib/linkedList/
+testdir/
+*.sh
