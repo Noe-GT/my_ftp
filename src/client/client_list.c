@@ -42,7 +42,6 @@ client_t *client_list_remove_fd(client_t *list, int fd)
     if (parse == NULL)
         return NULL;
     while (parse != NULL) {
-        printf("fd : %d\n", parse->cmd_fd);
         if (parse->cmd_fd == fd) {
             remove_elem(temp);
             return list;

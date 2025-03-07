@@ -17,7 +17,7 @@ int pwd_cmd(client_t *client, int n_tokens)
         (client->serv_status == NEEDUSER ||
         client->serv_status == NEEDPASS))
         return error_login(client);
-    sprintf(print_buff, "257 %s created\n", client->cwd);
+    sprintf(print_buff, "257 %s\n", client->cwd);
     if (send_buff(client->cmd_fd, print_buff) < 0)
         return -1;
     return 0;

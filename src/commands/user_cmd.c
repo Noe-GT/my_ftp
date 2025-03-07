@@ -33,7 +33,6 @@ int user_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
 
     if (n_tokens != 2)
         return error_parameters(client, "USER");
-    printf("satus : %d\n", client->serv_status);
     if (client->serv_status != NEEDUSER)
         return error_notfound(client, "USER");
     user = check_user(server, tokens[1]);

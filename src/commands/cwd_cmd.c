@@ -9,12 +9,20 @@
 
 static int change_direct(client_t *client, char *path)
 {
-    if (directory_exists(path)) {
+    int len = strlen(client->cwd) + strlen(path) + 2;
+    char *new_path = (char *)malloc(sizeof(char) * len);
+
+    strcpy(new_path, client->cwd);
+    strcat(new_path, "/");
+    strcat(new_path, path);
+    if (directory_exists(new_path)) {
         free(client->cwd);
-        client->cwd = strdup(path);
+        client->cwd = strdup(new_path);
     } else {
-        return send_buff(client->cmd_fd,
-            "501 Syntax error in parameters or arguments.\n");
+        free(new_path);
+        send_buff(client->cmd_fd,
+            "501 Incorrect path.\n");
+        return -1;
     }
     return 0;
 }
@@ -28,8 +36,7 @@ int cwd_cmd(client_t *client, char **tokens, int n_tokens)
         return error_login(client);
     if (change_direct(client, tokens[1]) < 0)
         return -1;
-    if (send_buff(client->cmd_fd,
-        "250 Requested file action okay, completed.\n") < 0)
+    if (dprintf(client->cmd_fd, "250 wd updated to '%s'\n", client->cwd) < 0)
         return -1;
     return 0;
 }
