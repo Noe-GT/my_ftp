@@ -31,6 +31,6 @@ client_t *client_list_get_fd(client_t *list, int fd);
 client_t *client_list_remove(client_t *list, size_t pos);
 client_t *client_list_remove_fd(client_t *list, int fd);
 void client_list_destroy(client_t *clients);
-int free_pasv(client_t *client);
+int close_pasv_socks(client_t *client);
 
 #endif

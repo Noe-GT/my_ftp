@@ -14,8 +14,7 @@ typedef enum serv_status_e {
     NEEDUSER,
     NEEDPASS,
     NEUTRAL,
-    PASSIVE_CHILD,
-    PASSIVE_PARENT,
+    PASSIVE,
     ACTIVE,
     TEST
 } serv_status_t;

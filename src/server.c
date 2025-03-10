@@ -15,7 +15,7 @@ static void close_client_socks(server_t *server)
     }
 }
 
-static int add_client(server_t *server, int new_fd, struct sockaddr_in *addr)
+static void add_client(server_t *server, int new_fd, struct sockaddr_in *addr)
 {
     client_t *new_client = client_list_create_elem(new_fd, server->nfds + 1,
         server->root_directory, addr);

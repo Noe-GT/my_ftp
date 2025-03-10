@@ -7,6 +7,7 @@
 
 #ifndef INCLUDE_H_
     #define INCLUDE_H_
+    #include "my.h"
     #include <netinet/in.h>
     #include <stdio.h>
     #include <stdlib.h>
@@ -17,6 +18,6 @@
     #include <arpa/inet.h>
     #include <poll.h>
     #include <stdbool.h>
-    #include <sys/stat.h>
+    #include <dirent.h>
 
 #endif /* !INCLUDE_H_ */

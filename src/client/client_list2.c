@@ -26,10 +26,8 @@ static char *get_status(client_t *client)
         return "NEEDUSER";
     case NEEDPASS:
         return "NEEDPASS";
-    case PASSIVE_CHILD:
-        return "PASSIVE_CHILD";
-    case PASSIVE_PARENT:
-        return "PASSIVE_PARENT";
+    case PASSIVE:
+        return "PASSIVE";
     case ACTIVE:
         return "ACTIVE";
     default:

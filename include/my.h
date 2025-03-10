@@ -12,6 +12,9 @@
     #include <stdlib.h>
     #include <unistd.h>
     #include <string.h>
+    #include <stdbool.h>
+    #include <dirent.h>
+    #include <sys/stat.h>
 
 int my_show_word_array(char *const *tab);
 int nbr_str(char *const *tab);
@@ -29,5 +32,8 @@ int char_is_present2(char *chars, char *str);
 int my_array_len(char **array);
 int *remove_from_int_array(int *array, int elemi, int arr_size);
 int *add_to_int_array(int *array, int new_elem, int arr_size);
+char **str_to_array(char *str, char *sep);
+int is_directory(const char *path);
+int disp_files(const char *path, int fd);
 
 #endif

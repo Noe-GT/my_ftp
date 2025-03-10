@@ -55,13 +55,15 @@ int pasv_cmd(client_t *client, int n_tokens)
         (client->serv_status == NEEDUSER || client->serv_status == NEEDPASS))
         return error_login(client);
     if (client->serv_status != NEUTRAL &&
-        client->serv_status != ACTIVE &&
+        client->serv_status != PASSIVE &&
         client->serv_status != TEST)
         return send_buff(client->cmd_fd, "506 command not available.\n");
-    if (set_passive(client) < 0) {
-        perror("pasv");
-        return -1;
+    if (client->serv_status != PASSIVE) {
+        if (set_passive(client) < 0) {
+            perror("pasv");
+            return -1;
+        }
     }
-    client->serv_status = PASSIVE_PARENT;
+    client->serv_status = PASSIVE;
     return pasv_message(client);
 }
