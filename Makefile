@@ -23,6 +23,7 @@ SRC	=	src/main.c \
 		src/commands/cwd_cmd.c \
 		src/commands/cdup_cmd.c \
 		src/commands/dele_cmd.c \
+		src/commands/retr_cmd.c \
 		src/modes.c \
 		src/errors.c \
 		src/server_utils.c \
@@ -30,6 +31,7 @@ SRC	=	src/main.c \
 		src/client/client_list.c \
 		src/client/client_list2.c \
 		src/system_utils.c \
+		src/path_handling.c \
 
 OBJ	=	$(SRC:src/%.c=bin/%.o)
 

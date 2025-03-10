@@ -42,6 +42,7 @@ int list_cmd(server_t *server, client_t *client, char **tokens, int n_tokens);
 int cwd_cmd(client_t *client, char **tokens, int n_tokens);
 int cdup_cmd(client_t *client, int n_tokens);
 int dele_cmd(client_t *client, char **tokens, int n_tokens);
+int retr_cmd(server_t *server, client_t *client, char **tokens, int n_tokens);
 int manage_client(server_t *server, int client_i);
 int manage_commands(server_t *server, client_t *client);
 int send_buff(int client_fd, char *buffer);
@@ -53,4 +54,5 @@ int passive_mode(server_t *server, client_t *client);
 void free_passive(server_t *server);
 bool directory_exists(const char *path);
 int client_remove(server_t *server, client_t *client);
+char *concat_paths(char *path1, char *path2);
 #endif /* !SOCKET_H_ */

@@ -9,12 +9,8 @@
 
 static int change_direct(client_t *client, char *path)
 {
-    int len = strlen(client->cwd) + strlen(path) + 2;
-    char *new_path = (char *)malloc(sizeof(char) * len);
+    char *new_path = concat_paths(client->cwd, path);
 
-    strcpy(new_path, client->cwd);
-    strcat(new_path, "/");
-    strcat(new_path, path);
     if (directory_exists(new_path)) {
         free(client->cwd);
         client->cwd = strdup(new_path);
