@@ -26,7 +26,7 @@ static int pasv_print(client_t *client, char *ip, int port)
             return -1;
         ip_parse = strtok(NULL, ".");
     }
-    if (dprintf(client->cmd_fd, "%d,%d).\n", port / 256, port % 256) < 0)
+    if (dprintf(client->cmd_fd, "%d,%d).\r\n", port / 256, port % 256) < 0)
         return -1;
     return 0;
 }

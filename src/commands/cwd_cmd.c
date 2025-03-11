@@ -32,7 +32,7 @@ int cwd_cmd(client_t *client, char **tokens, int n_tokens)
         return error_login(client);
     if (change_direct(client, tokens[1]) < 0)
         return -1;
-    if (dprintf(client->cmd_fd, "250 wd updated to '%s'\n", client->cwd) < 0)
+    if (dprintf(client->cmd_fd, "250 wd updated to '%s'\r\n", client->cwd) < 0)
         return -1;
     return 0;
 }
