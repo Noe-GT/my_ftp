@@ -9,7 +9,7 @@
 
 int noop_cmd(int client_fd)
 {
-    if (send_buff(client_fd, "200 NOOP command successful\n") == -1)
+    if (send_buff(client_fd, "200 NOOP command successful\r\n") == -1)
         return -1;
     return 0;
 }

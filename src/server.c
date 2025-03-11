@@ -42,7 +42,7 @@ static int new_client(server_t *server)
     }
     add_client(server, new_fd, addr);
     printf("New client connection (%d)\n", new_fd);
-    send_buff(new_fd, "220 FTP Server ready.\n");
+    send_buff(new_fd, "220 FTP Server ready.\r\n");
     return 0;
 }
 

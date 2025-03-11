@@ -18,10 +18,10 @@ user_t *check_user(server_t *server, char *user_name)
 
 static int pass_message(client_t *client, char *user)
 {
-    char *error_buff = malloc(sizeof(char) * (strlen(user) + 28));
+    char *error_buff = malloc(sizeof(char) * (strlen(user) + 29));
     int out;
 
-    sprintf(error_buff, "331 Password required for %s\n", user);
+    sprintf(error_buff, "331 Password required for %s\r\n", user);
     out = send_buff(client->cmd_fd, error_buff);
     free(error_buff);
     return out;
@@ -33,7 +33,7 @@ int user_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
 
     if (n_tokens != 2)
         return error_parameters(client, "USER");
-    if (client->serv_status != NEEDUSER)
+    if (client->serv_status == NEEDPASS)
         return error_notfound(client, "USER");
     user = check_user(server, tokens[1]);
     client->user = user;

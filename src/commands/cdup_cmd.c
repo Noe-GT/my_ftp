@@ -39,7 +39,7 @@ int cdup_cmd(client_t *client, int n_tokens)
     if (change_direct(client) < 0)
         return -1;
     if (send_buff(client->cmd_fd,
-        "250 Requested file action okay, completed.\n") < 0)
+        "250 Requested file action okay, completed.\r\n") < 0)
         return -1;
     return 0;
 }

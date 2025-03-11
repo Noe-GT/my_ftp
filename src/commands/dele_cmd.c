@@ -17,12 +17,12 @@ int del_file(client_t *client, char *filename)
     strcat(path, filename);
     if (remove(path) == 0)
         return send_buff(client->cmd_fd,
-            "250 Requested file action okay, completed.\n");
+            "250 Requested file action okay, completed.\r\n");
     if (errno == EBUSY)
         return send_buff(client->cmd_fd,
-            "450 Requested file action not taken. File unavailable.\n");
+            "450 Requested file action not taken. File unavailable.\r\n");
     return send_buff(client->cmd_fd,
-        "550 Requested action not taken. File unavailable.\n");
+        "550 Requested action not taken. File unavailable.\r\n");
 }
 
 int dele_cmd(client_t *client, char **tokens, int n_tokens)

@@ -57,7 +57,7 @@ int pasv_cmd(client_t *client, int n_tokens)
     if (client->serv_status != NEUTRAL &&
         client->serv_status != PASSIVE &&
         client->serv_status != TEST)
-        return send_buff(client->cmd_fd, "506 command not available.\n");
+        return send_buff(client->cmd_fd, "506 command not available.\r\n");
     if (client->serv_status != PASSIVE) {
         if (set_passive(client) < 0) {
             perror("pasv");

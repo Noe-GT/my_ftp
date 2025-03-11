@@ -36,7 +36,7 @@ int connect_trans_sock(client_t *client)
     if (new_fd < 0) {
         if (errno != EWOULDBLOCK) {
             perror("ERROR: accept failed");
-            send_buff(client->cmd_fd, "525 Accept failed.\n");
+            send_buff(client->cmd_fd, "525 Accept failed.\r\n");
         }
         return -1;
     }
@@ -61,7 +61,7 @@ int passive_mode(server_t *server, client_t *client)
 
     if (out < 0) {
         perror("");
-        send_buff(client->cmd_fd, "508 Fork failed.\n");
+        send_buff(client->cmd_fd, "508 Fork failed.\r\n");
         return -1;
     } else if (out == 0)
         return pasv_child(server, client, out);

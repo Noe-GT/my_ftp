@@ -11,7 +11,7 @@ int quit_cmd(server_t *server, client_t *client)
 {
     int temp = (int)client->cmd_fd;
 
-    send_buff(client->cmd_fd, "221 Goodbye.\n");
+    send_buff(client->cmd_fd, "221 Goodbye.\r\n");
     close_pasv_socks(client);
     client_remove(server, client);
     printf("Client socket (%d) closed\n", temp);
