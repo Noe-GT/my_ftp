@@ -25,6 +25,7 @@ static void list_child(server_t *server, client_t *client, char *path)
     send_buff(client->cmd_fd, "226 List sent, closing socket\r\n");
     dup2(client->c_transfer_fd, 1);
     execlp("ls", "ls", "-l", path, NULL);
+    send_buff(client->c_transfer_fd, "\r\n");
     free_passive(server);
     exit(0);
 }

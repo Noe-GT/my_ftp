@@ -43,6 +43,7 @@ static void retr_child(server_t *server, client_t *client, char *path)
 {
     send_buff(client->cmd_fd, "226 File sent, closing socket\r\n");
     print_file(path, client->c_transfer_fd);
+    send_buff(client->c_transfer_fd, "\r\n");
     free_passive(server);
     exit(0);
 }
