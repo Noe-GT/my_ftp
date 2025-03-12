@@ -20,29 +20,28 @@ static int check_error(client_t *client, int n_tokens)
     return 1;
 }
 
-static int print_file(char *path, int fd)
+static void read_and_write(int r_fd, int w_fd)
 {
-    FILE* ffd = fopen(path, "r");
-    char *line = NULL;
-    ssize_t res = 0;
-    size_t len = 50;
+    size_t len = 0;
+    char *buff = (char *)malloc(sizeof(char) * len);
+    char *t_buff = (char *)malloc(sizeof(char) * 1);
+    int r_out = read(r_fd, t_buff, 1);
 
-    if (ffd == NULL)
-        return -1;
-    while (res != -1) {
-        res = getline(&line, &len, ffd);
-        dprintf(fd, "%s\n", line);
+    while (r_out) {
+        len++;
+        buff = realloc(buff, len);
+        buff[len - 1] = t_buff[0];
+        r_out = read(r_fd, t_buff, 1);
     }
-    if (line)
-        free(line);
-    fclose(ffd);
-    return 0;
+    free(t_buff);
+    write(w_fd, buff, len);
+    free(buff);
 }
 
-static void stor_child(server_t *server, client_t *client, char *path)
+static void stor_child(server_t *server, client_t *client, int f_fd)
 {
     send_buff(client->cmd_fd, "226 File sent, closing socket\r\n");
-    print_file(path, client->c_transfer_fd);
+    read_and_write(client->c_transfer_fd, f_fd);
     send_buff(client->c_transfer_fd, "\r\n");
     free_passive(server);
     exit(0);
@@ -52,16 +51,22 @@ int stor_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
 {
     int fout;
     char *path;
+    int f_fd;
 
     if (check_error(client, n_tokens) != 1)
         return -1;
     path = concat_paths(client->cwd, tokens[1]);
+    f_fd = open(path, O_CREAT);
+    if (f_fd < 0) {
+        send_buff(client->cmd_fd, "550 can't create file\r\n");
+        return -1;
+    }
     send_buff(client->cmd_fd, "150 opening data socket\r\n");
     fout = passive_mode(server, client);
     if (fout != 0) {
         client->serv_status = NEUTRAL;
         return fout;
     }
-    stor_child(server, client, tokens[1]);
+    stor_child(server, client, f_fd);
     return 0;
 }

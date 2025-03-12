@@ -14,6 +14,8 @@ static int check_file_cmds(server_t *server, client_t *client,
         return list_cmd(server, client, tokens, n_tokens);
     if (strcmp(tokens[0], "RETR") == 0)
         return retr_cmd(server, client, tokens, n_tokens);
+    if (strcmp(tokens[0], "STOR") == 0)
+        return stor_cmd(server, client, tokens, n_tokens);
     if (strcmp(tokens[0], "DELE") == 0)
         return dele_cmd(client, tokens, n_tokens);
     return error_notfound(client, tokens[0]);

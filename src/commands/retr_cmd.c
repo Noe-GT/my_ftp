@@ -64,6 +64,6 @@ int retr_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
         client->serv_status = NEUTRAL;
         return fout;
     }
-    retr_child(server, client, tokens[1]);
+    retr_child(server, client, path);
     return 0;
 }
