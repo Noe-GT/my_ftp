@@ -19,5 +19,6 @@
     #include <poll.h>
     #include <stdbool.h>
     #include <dirent.h>
+    #include <fcntl.h>
 
 #endif /* !INCLUDE_H_ */

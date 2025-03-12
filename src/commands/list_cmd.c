@@ -16,7 +16,7 @@ static int check_error(client_t *client, int n_tokens)
         return error_login(client);
     if (client->serv_status != PASSIVE &&
         client->serv_status != ACTIVE)
-        return send_buff(client->cmd_fd, "506 command not available.\r\n");
+        return send_buff(client->cmd_fd, "425 command not available.\r\n");
     return 1;
 }
 

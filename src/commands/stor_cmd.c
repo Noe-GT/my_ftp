@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2025
 ** ftp
 ** File description:
-** retr_cmd
+** stor_cmd
 */
 
 #include "../../include/server.h"
@@ -10,34 +10,36 @@
 static int check_error(client_t *client, int n_tokens)
 {
     if (n_tokens != 2)
-        return error_parameters(client, "RETR");
+        return error_parameters(client, "stor");
     if (client->serv_status != TEST &&
         (client->serv_status == NEEDUSER || client->serv_status == NEEDPASS))
         return error_login(client);
     if (client->serv_status != PASSIVE &&
         client->serv_status != ACTIVE)
-        return send_buff(client->cmd_fd, "425 command not available.\r\n");
+        return send_buff(client->cmd_fd, "506 command not available.\r\n");
     return 1;
 }
 
-static int print_file(char *path, int p_fd)
+static int print_file(char *path, int fd)
 {
-    struct stat st;
-    size_t size;
-    char *buff;
-    int f_fd;
+    FILE* ffd = fopen(path, "r");
+    char *line = NULL;
+    ssize_t res = 0;
+    size_t len = 50;
 
-    stat(path, &st);
-    size = st.st_size;
-    buff = (char *)malloc(sizeof(char) * size);
-    f_fd = open(path, O_RDONLY);
-    read(f_fd, buff, size);
-    send_buff(p_fd, buff);
-    free(buff);
+    if (ffd == NULL)
+        return -1;
+    while (res != -1) {
+        res = getline(&line, &len, ffd);
+        dprintf(fd, "%s\n", line);
+    }
+    if (line)
+        free(line);
+    fclose(ffd);
     return 0;
 }
 
-static void retr_child(server_t *server, client_t *client, char *path)
+static void stor_child(server_t *server, client_t *client, char *path)
 {
     send_buff(client->cmd_fd, "226 File sent, closing socket\r\n");
     print_file(path, client->c_transfer_fd);
@@ -46,7 +48,7 @@ static void retr_child(server_t *server, client_t *client, char *path)
     exit(0);
 }
 
-int retr_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
+int stor_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
 {
     int fout;
     char *path;
@@ -54,16 +56,12 @@ int retr_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
     if (check_error(client, n_tokens) != 1)
         return -1;
     path = concat_paths(client->cwd, tokens[1]);
-    if (access(path, R_OK) != 0) {
-        send_buff(client->cmd_fd, "550 can't access file\r\n");
-        return -1;
-    }
     send_buff(client->cmd_fd, "150 opening data socket\r\n");
     fout = passive_mode(server, client);
     if (fout != 0) {
         client->serv_status = NEUTRAL;
         return fout;
     }
-    retr_child(server, client, tokens[1]);
+    stor_child(server, client, tokens[1]);
     return 0;
 }

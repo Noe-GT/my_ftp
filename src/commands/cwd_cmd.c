@@ -17,7 +17,7 @@ static int change_direct(client_t *client, char *path)
     } else {
         free(new_path);
         send_buff(client->cmd_fd,
-            "501 Incorrect path.\r\n");
+            "550 Incorrect path.\r\n");
         return -1;
     }
     return 0;
