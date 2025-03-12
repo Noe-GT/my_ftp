@@ -27,7 +27,7 @@ int main(int ac, char **av)
         free(server);
         return 84;
     }
-    if (set_root_direct(server, av[2]) < 0) {
+    if ( set_root_direct(server, av[2]) < 0) {
         free(server);
         return 84;
     }
