@@ -22,7 +22,7 @@ static int check_error(client_t *client, int n_tokens)
 
 static void read_and_write(int r_fd, int w_fd)
 {
-    size_t len = 1;
+    size_t len = 0;
     char *buff = (char *)malloc(sizeof(char) * len);
     char *t_buff = (char *)malloc(sizeof(char) * 1);
     int r_out = read(r_fd, t_buff, 1);
@@ -57,7 +57,7 @@ int stor_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
     if (check_error(client, n_tokens) != 1)
         return -1;
     path = concat_paths(client->cwd, tokens[1]);
-    f_fd = open(path, O_CREAT | O_WRONLY, 00777);
+    f_fd = open(path, O_CREAT | O_WRONLY | O_TRUNC, 0644);
     if (f_fd < 0) {
         send_buff(client->cmd_fd, "550 can't create file\r\n");
         return -1;
