@@ -22,27 +22,28 @@ static int check_error(client_t *client, int n_tokens)
 
 static void read_and_write(int r_fd, int w_fd)
 {
-    size_t len = 0;
+    size_t len = 1;
     char *buff = (char *)malloc(sizeof(char) * len);
     char *t_buff = (char *)malloc(sizeof(char) * 1);
     int r_out = read(r_fd, t_buff, 1);
 
-    while (r_out) {
+    while (r_out != 0 && t_buff[0] != '\n') {
         len++;
         buff = realloc(buff, len);
-        buff[len - 1] = t_buff[0];
+        strcat(buff, t_buff);
         r_out = read(r_fd, t_buff, 1);
     }
+    if (write(w_fd, buff, len) < 0)
+        perror("read_and_write");
     free(t_buff);
-    write(w_fd, buff, len);
     free(buff);
+    close(w_fd);
 }
 
 static void stor_child(server_t *server, client_t *client, int f_fd)
 {
-    send_buff(client->cmd_fd, "226 File sent, closing socket\r\n");
     read_and_write(client->c_transfer_fd, f_fd);
-    send_buff(client->c_transfer_fd, "\r\n");
+    send_buff(client->cmd_fd, "226 File sent, closing socket\r\n");
     free_passive(server);
     exit(0);
 }
@@ -56,7 +57,7 @@ int stor_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
     if (check_error(client, n_tokens) != 1)
         return -1;
     path = concat_paths(client->cwd, tokens[1]);
-    f_fd = open(path, O_CREAT);
+    f_fd = open(path, O_CREAT | O_WRONLY, 00777);
     if (f_fd < 0) {
         send_buff(client->cmd_fd, "550 can't create file\r\n");
         return -1;
