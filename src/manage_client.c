@@ -45,36 +45,52 @@ static int check_cmds(server_t *server, client_t *client,
     return check_file_cmds(server, client, tokens, n_tokens);
 }
 
-char **tokenize(char *buffer)
+static char **tokenize(char *buffer)
 {
-    char *clean;
     char **tokens;
 
     if (buffer == NULL)
         return NULL;
-    clean = clean_str(buffer, "\n\r");
-    tokens = my_str_to_word_array(clean, " ");
-    free(clean);
+    tokens = str_to_array(buffer, " ");
     free(buffer);
     return tokens;
 }
 
-char *read_from_socket(int client_fd)
+static char *handle_buff(char *t_buff, char *res_buff, int len)
 {
-    char *buffer = (char *)malloc(sizeof(char) * 1000);
-    int len = read(client_fd, buffer, 1000 - 1);
+    if (len == 2)
+        strcpy(res_buff, t_buff);
+    else
+        strcat(res_buff, t_buff);
+    return res_buff;
+}
 
-    if (len == -1) {
-        printf("ERROR: read failed for client %d\n", client_fd);
-        return NULL;
+static char *read_from_socket(int r_fd)
+{
+    size_t len = 1;
+    char *res_buff = (char *)malloc(sizeof(char) * len);
+    char *t_buff = (char *)malloc(sizeof(char) * 2);
+    int r_out = read(r_fd, t_buff, 1);
+
+    t_buff[1] = '\0';
+    while (r_out != 0 && t_buff[0] != '\n') {
+        if (t_buff[0] != '\r') {
+            len++;
+            res_buff = realloc(res_buff, len);
+            res_buff = handle_buff(t_buff, res_buff, len);
+        }
+        r_out = read(r_fd, t_buff, 1);
+        t_buff[1] = '\0';
     }
-    buffer[len] = '\0';
-    return buffer;
+    free(t_buff);
+    res_buff[len - 1] = '\0';
+    return res_buff;
 }
 
 int manage_commands(server_t *server, client_t *client)
 {
-    char **tokens = tokenize(read_from_socket(client->cmd_fd));
+    char *cmd_buff = read_from_socket(client->cmd_fd);
+    char **tokens = tokenize(cmd_buff);
     int n_tokens = 0;
 
     if (tokens == NULL)

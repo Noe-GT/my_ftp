@@ -9,9 +9,6 @@
 
 void print_array(char **array)
 {
-    while (*array) {
-        puts(*array);
-        array++;
-        putchar('\n');
-    }
+    for (int i = 0; array[i] != NULL; i++)
+        printf("%d: %s\n", i, array[i]);
 }

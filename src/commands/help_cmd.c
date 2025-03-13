@@ -29,23 +29,22 @@ static int send_help_cmd(server_t *server, int client_fd, char *cmd)
             return send_buff(client_fd, buff);
         }
     }
-    return 0;
+    return 1;
 }
 
 int help_cmd(server_t *server, client_t *client, char **tokens, int n_tokens)
 {
     int res = 0;
 
-    if (n_tokens != 1)
+    if (n_tokens > 2)
         return error_parameters(client, "HELP");
     if (send_buff(client->cmd_fd,
-        "214-The following commands are recognized:\r\n") < 0)
+        "214 The following commands are recognized:\r\n") < 0)
         return -1;
-    if (n_tokens == 2)
+    if (n_tokens == 2) {
         res = send_help_cmd(server, client->cmd_fd, tokens[1]);
-    if (res == -1)
-        return -1;
-    if (res > 1)
-        return 0;
+        if (res != 1)
+            return res;
+    }
     return send_help(server, client->cmd_fd);
 }

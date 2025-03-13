@@ -29,7 +29,7 @@ int error_parameters(client_t *client, char *cmd)
     char *error_buff = malloc(sizeof(char) * (strlen(cmd) + 37));
     int out;
 
-    sprintf(error_buff, "500 %s: command requires a parameter\r\n", cmd);
+    sprintf(error_buff, "500 %s: Invalid number of parameters\r\n", cmd);
     out = send_buff(client->cmd_fd, error_buff);
     free(error_buff);
     return out;
