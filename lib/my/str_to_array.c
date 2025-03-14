@@ -33,7 +33,6 @@ char **str_to_array(char *str, char *sep)
     char *parse = strtok(str, sep);
     char **array = (char **)malloc(sizeof(char *) * (len + 1));
 
-    printf("len: %d\n", len);
     for (int i = 0; parse != NULL; i++) {
         array[i] = strdup(parse);
         parse = strtok(NULL, sep);

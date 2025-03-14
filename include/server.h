@@ -10,7 +10,7 @@
     #include "errors.h"
     #include "shared.h"
     #include "client.h"
-    #define INITIAL_STATUS NEEDUSER
+    #define INITIAL_STATUS NEUTRAL
 
 typedef struct server_s {
     bool stop_serv;

@@ -20,23 +20,34 @@ static int check_error(client_t *client, int n_tokens)
     return 1;
 }
 
+static char *handle_buff(char *t_buff, char *res_buff, int len)
+{
+    if (len == 1)
+        strcpy(res_buff, t_buff);
+    else
+        strcat(res_buff, t_buff);
+    return res_buff;
+}
+
 static void read_and_write(int r_fd, int w_fd)
 {
     size_t len = 0;
-    char *buff = (char *)malloc(sizeof(char) * len);
-    char *t_buff = (char *)malloc(sizeof(char) * 1);
+    char *w_buff = (char *)malloc(sizeof(char) * len);
+    char *t_buff = (char *)malloc(sizeof(char) * 2);
     int r_out = read(r_fd, t_buff, 1);
 
+    t_buff[1] = '\0';
     while (r_out != 0 && t_buff[0] != '\n') {
         len++;
-        buff = realloc(buff, len);
-        strcat(buff, t_buff);
+        w_buff = realloc(w_buff, len);
+        w_buff = handle_buff(t_buff, w_buff, len);
         r_out = read(r_fd, t_buff, 1);
+        t_buff[1] = '\0';
     }
-    if (write(w_fd, buff, len) < 0)
+    if (write(w_fd, w_buff, len) < 0)
         perror("read_and_write");
     free(t_buff);
-    free(buff);
+    free(w_buff);
     close(w_fd);
 }
 
