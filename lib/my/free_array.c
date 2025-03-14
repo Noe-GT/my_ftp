@@ -12,7 +12,6 @@ void free_array(char **array)
     int i = 0;
 
     while (array[i] != NULL) {
-        printf("elem : %s\n", array[i]);
         free(array[i]);
         i++;
     }

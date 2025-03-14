@@ -18,24 +18,66 @@ static void init_users(server_t *server)
     server->users[0] = usr1;
 }
 
-static void init_cmd_desc(server_t *server)
+static void init_cmds(server_t *server)
 {
-    server->available_cmds = (char **)malloc(sizeof(char *) * 3);
-    server->cmds_desc = (char **)malloc(sizeof(char *) * 3);
-    server->available_cmds[0] = strdup("HELP");
-    server->available_cmds[1] = strdup("QUIT");
-    server->available_cmds[2] = NULL;
-    server->cmds_desc[0] = strdup("HELP [<SP> <string>] <CRLF> :"
-        "List available commands");
-    server->cmds_desc[1] = strdup("QUIT <CRLF> : Disconnection");
-    server->cmds_desc[2] = NULL;
+    server->available_cmds = (char **)malloc(sizeof(char *) * 14);
+    server->available_cmds[0] = strdup("USER");
+    server->available_cmds[1] = strdup("PASS");
+    server->available_cmds[2] = strdup("CWD");
+    server->available_cmds[3] = strdup("CDUP");
+    server->available_cmds[4] = strdup("QUIT");
+    server->available_cmds[5] = strdup("DELE");
+    server->available_cmds[6] = strdup("PWD");
+    server->available_cmds[7] = strdup("PASV");
+    server->available_cmds[8] = strdup("HELP");
+    server->available_cmds[9] = strdup("NOOP");
+    server->available_cmds[10] = strdup("RETR");
+    server->available_cmds[11] = strdup("STOR");
+    server->available_cmds[12] = strdup("LIST");
+    server->available_cmds[13] = NULL;
+}
+
+static void init_cmds_desc2(server_t *server)
+{
+    server->cmds_desc[7] = strdup("PASV <CRLF> :"
+        " Enable 'passive' mode for data transfer");
+    server->cmds_desc[8] = strdup("HELP [<SP> <string>] <CRLF>"
+        " : List available commands");
+    server->cmds_desc[9] = strdup("NOOP <CRLF> : Do nothing");
+    server->cmds_desc[10] = strdup("RETR <SP> <pathname> <CRLF> :"
+        " Download file from server to client");
+    server->cmds_desc[11] = strdup("STOR <SP> <pathname> <CRLF> :"
+        " Upload file from client to server");
+    server->cmds_desc[12] = strdup("LIST [<SP> <pathname>] <CRLF> :"
+        " List files in the current working directory");
+    server->cmds_desc[13] = NULL;
+}
+
+static void init_cmds_desc(server_t *server)
+{
+    server->cmds_desc = (char **)malloc(sizeof(char *) * 14);
+    server->cmds_desc[0] = strdup("USER <SP> <username> <CRLF> : "
+        "Specify user for authentication");
+    server->cmds_desc[1] = strdup("PASS <SP> <password> <CRLF> : "
+        "Specify password for authentication");
+    server->cmds_desc[2] = strdup("CWD  <SP> <pathname> <CRLF>"
+        " : Change working directory");
+    server->cmds_desc[3] = strdup("CDUP <CRLF> : Change working "
+        "directory to parent directory");
+    server->cmds_desc[4] = strdup("QUIT <CRLF> : Disconnection");
+    server->cmds_desc[5] = strdup("DELE <SP> <pathname> <CRLF> "
+        ": Delete file on the server");
+    server->cmds_desc[6] = strdup("PWD  <CRLF> :"
+        " Print working directory");
+    init_cmds_desc2(server);
 }
 
 int init(server_t *server, int port)
 {
     struct sockaddr_in *addr = make_addr(port);
 
-    init_cmd_desc(server);
+    init_cmds(server);
+    init_cmds_desc(server);
     server->mport = port;
     server->msock_addrlen = sizeof(*addr);
     server->msock_addr = addr;
