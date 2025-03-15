@@ -90,18 +90,22 @@ static char *read_from_socket(int r_fd)
 int manage_commands(server_t *server, client_t *client)
 {
     char *cmd_buff = read_from_socket(client->cmd_fd);
-    char **tokens = tokenize(cmd_buff);
     int n_tokens = 0;
+    int out = -1;
+    char **tokens;
 
+    if (strlen(cmd_buff) < 1 || cmd_buff[0] == ' ') {
+        free(cmd_buff);
+        return -1;
+    }
+    tokens = tokenize(cmd_buff);
     if (tokens == NULL)
         return -1;
     n_tokens = my_array_len(tokens);
-    if (n_tokens < 1) {
-        printf("Client %d entered an invalid command\n", client->cmd_fd);
-        free_array(tokens);
-        return -1;
-    }
-    return check_cmds(server, client, tokens, n_tokens);
+    if (n_tokens >= 1)
+        out = check_cmds(server, client, tokens, n_tokens);
+    free_array(tokens);
+    return out;
 }
 
 int manage_client(server_t *server, int client_i)
