@@ -10,5 +10,5 @@
 void print_array(char **array)
 {
     for (int i = 0; array[i] != NULL; i++)
-        printf("%d: %s\n", i, array[i]);
+        printf("%d: '%s'\n", i, array[i]);
 }

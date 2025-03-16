@@ -9,13 +9,17 @@
 
 static void init_users(server_t *server)
 {
-    user_t *usr1 = (user_t *)malloc(sizeof(user_t));
-
-    server->n_users = 1;
-    usr1->name = strdup("Anonymous");
-    usr1->pass = strdup("");
+    server->n_users = 3;
     server->users = (user_t **)malloc(sizeof(user_t *) * server->n_users);
-    server->users[0] = usr1;
+    server->users[0] = (user_t *)malloc(sizeof(user_t));
+    server->users[0]->name = strdup("Anonymous");
+    server->users[0]->pass = strdup("");
+    server->users[1] = (user_t *)malloc(sizeof(user_t));
+    server->users[1]->name = strdup("Jhon");
+    server->users[1]->pass = strdup("12345678");
+    server->users[2] = (user_t *)malloc(sizeof(user_t));
+    server->users[2]->name = strdup("Paul");
+    server->users[2]->pass = strdup("1234");
 }
 
 static void init_cmds(server_t *server)

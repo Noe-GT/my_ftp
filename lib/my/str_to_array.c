@@ -21,7 +21,9 @@ static int count_sep(char *str, char *sep)
     int count = 0;
 
     for (int i = 0; str[i] != '\0'; i++) {
-        if (char_in_str(sep, str[i]))
+        if (char_in_str(sep, str[i]) &&
+            str[i + 1] != '\0' &&
+            !char_in_str(sep, str[i + 1]))
             count++;
     }
     return count;
